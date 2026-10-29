@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudPulse - Intelligent Cloud Operations (Copilot Edition)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #475569;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: #2563eb;
+    }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background-color: #2563eb;
+      color: #ffffff;
+      border: 1px solid #2563eb;
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+    .btn-outline {
+      background-color: transparent;
+      color: #2563eb;
+      border: 1px solid #cbd5e1;
+      margin-left: 12px;
+    }
+    .btn-outline:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+    /* Hero Section */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background-color: #dbeafe;
+      color: #1e40af;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #64748b;
+      max-width: 680px;
+      margin: 0 auto 32px;
+    }
+    .hero-dashboard-mockup {
+      margin-top: 50px;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      text-align: left;
+    }
+    .mockup-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+    .mockup-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .stat-card {
+      background-color: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #f1f5f9;
+    }
+    .stat-card span {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .stat-card h3 {
+      font-size: 1.5rem;
+      color: #0f172a;
+      margin-top: 4px;
+    }
+    /* Features Section */
+    .features {
+      padding: 80px 0;
+      background-color: #ffffff;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .section-title h2 {
+      font-size: 2.2rem;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+    .section-title p {
+      color: #64748b;
+      font-size: 1.1rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    .feature-card {
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background-color: #ffffff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.08);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background-color: #eff6ff;
+      color: #2563eb;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+    .feature-card p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+    /* Metrics banner */
+    .metrics {
+      background-color: #0f172a;
+      color: #ffffff;
+      padding: 60px 0;
+      text-align: center;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    .metric-item h2 {
+      font-size: 2.8rem;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+    .metric-item p {
+      color: #94a3b8;
+      font-size: 1rem;
+    }
+    /* Footer */
+    footer {
+      background-color: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 60px 0 30px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-col h4 {
+      margin-bottom: 16px;
+      color: #0f172a;
+      font-size: 1rem;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+    .footer-col ul a {
+      color: #64748b;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .footer-col ul a:hover {
+      color: #2563eb;
+    }
+    .footer-bottom {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.2rem; }
+      .features-grid, .mockup-stats-grid, .metrics-grid, .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#" class="logo">⚡ CloudPulse</a>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#metrics">Impact</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#docs">Docs</a></li>
+        </ul>
+        <div>
+          <a href="#" class="btn btn-primary">Get Started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="badge">Copilot Generated • Production Ready</span>
+        <h1>Autonomous Cloud Cost &amp; Health Optimization</h1>
+        <p>Analyze multi-cloud telemetry, detect workload anomalies in real time, and cut monthly cloud spending by up to 40% with zero code changes.</p>
+        <div>
+          <a href="#" class="btn btn-primary">Start Free 14-Day Trial</a>
+          <a href="#" class="btn btn-outline">Schedule Live Demo</a>
+        </div>
+
+        <div class="hero-dashboard-mockup">
+          <div class="mockup-header">
+            <strong>CloudPulse Infrastructure Telemetry</strong>
+            <span style="color:#10b981; font-weight:600;">● System Active: All 4 Regions Healthy</span>
+          </div>
+          <div class="mockup-stats-grid">
+            <div class="stat-card">
+              <span>Total Monthly Cloud Spend</span>
+              <h3>$14,280 <small style="color:#10b981; font-size:0.8rem;">(-28%)</small></h3>
+            </div>
+            <div class="stat-card">
+              <span>Idle Compute Reclaimed</span>
+              <h3>64 vCPUs</h3>
+            </div>
+            <div class="stat-card">
+              <span>Cost Waste Score</span>
+              <h3>94 / 100</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="container">
+        <div class="section-title">
+          <h2>Engineered for Modern DevOps Teams</h2>
+          <p>Gain continuous visibility, governance, and automatic right-sizing across AWS, GCP, and Azure.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3>Deep Telemetry Analysis</h3>
+            <p>Ingests real-time CloudWatch, Stackdriver, and Kubernetes cluster metrics to identify underutilized resources.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Automated Right-Sizing</h3>
+            <p>One-click policy enforcement to spin down staging pods after hours and right-size over-provisioned instances.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>Compliance &amp; Governance</h3>
+            <p>Maintain SOC2 and ISO27001 posture with automated IAM drift alerts and orphan storage bucket pruning.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="metrics" id="metrics">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <h2>99.99%</h2>
+            <p>Service Reliability Guarantee</p>
+          </div>
+          <div class="metric-item">
+            <h2>42%</h2>
+            <p>Average Monthly Cost Reduction</p>
+          </div>
+          <div class="metric-item">
+            <h2>12,500+</h2>
+            <p>Active Cloud Engineers</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4 style="color:#2563eb;">CloudPulse</h4>
+          <p style="color:#64748b; font-size:0.9rem;">The unified AI copilot for multi-cloud infrastructure and financial operations (FinOps).</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Kubernetes Optimizer</a></li>
+            <li><a href="#">FinOps Suite</a></li>
+            <li><a href="#">Integrations</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">Community Forum</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Security &amp; Privacy</a></li>
+            <li><a href="#">Contact Support</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 CloudPulse Inc. All rights reserved. Generated via GitHub Copilot.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

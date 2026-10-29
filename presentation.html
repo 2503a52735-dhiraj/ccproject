@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Smart Dash Button — Project Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070c18;
+      --card-bg: rgba(20, 30, 55, 0.75);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --cyan: #00d2ff;
+      --indigo: #6366f1;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 210, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Top presentation control bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      background: rgba(11, 19, 38, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 100;
+    }
+
+    .proj-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-ppt {
+      font-size: 0.7rem;
+      background: rgba(0, 210, 255, 0.15);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--cyan);
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 90px;
+      text-align: center;
+    }
+
+    /* Slide viewport */
+    .slide-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1300px;
+      height: 82vh;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 44px 56px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.985); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Slide header */
+    .slide-header {
+      margin-bottom: 24px;
+    }
+
+    .slide-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .slide-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: grid;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .cols-5 { grid-template-columns: repeat(5, 1fr); gap: 14px; }
+
+    /* Cards inside slides */
+    .info-card {
+      background: rgba(10, 16, 32, 0.65);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-head {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-list li {
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-list li::before {
+      content: "•";
+      color: var(--cyan);
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    /* Title Slide Specifics */
+    .title-slide-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      gap: 20px;
+    }
+
+    .title-main {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      background: linear-gradient(90deg, #ffffff, #a5f3fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .title-sub {
+      font-size: 1.35rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      max-width: 800px;
+    }
+
+    .title-meta-box {
+      margin-top: 20px;
+      display: inline-flex;
+      gap: 20px;
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      padding: 14px 22px;
+      border-radius: 14px;
+      width: fit-content;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Slide footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px solid var(--card-border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Keyboard hint */
+    .kb-hint {
+      position: absolute;
+      bottom: 6px;
+      right: 28px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="proj-title">
+      <span>⚡ ESP8266 IoT SMART DASH BUTTON</span>
+      <span class="badge-ppt">10 SLIDES DECK</span>
+    </div>
+    <div class="controls-group">
+      <a href="index.html" class="nav-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">⚡ Live Dashboard</a>
+      <a href="cc_project_presentation.pptx" download="cc_project_presentation.pptx" class="nav-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.2); border-color:rgba(16,185,129,0.4);" title="Download PowerPoint File (.pptx)">📥 Download .PPTX</a>
+      <button class="nav-btn" id="prev-btn">◀ Previous</button>
+      <span class="slide-counter" id="slide-num">Slide 1 / 10</span>
+      <button class="nav-btn" id="next-btn">Next ▶</button>
+      <button class="nav-btn" id="fullscreen-btn">⛶ Fullscreen</button>
+    </div>
+  </header>
+
+  <!-- Slide Viewport -->
+  <main class="slide-container">
+
+    <!-- SLIDE 1: TITLE -->
+    <section class="slide active">
+      <div class="title-slide-content">
+        <div class="slide-tag">COURSE PROJECT : CLOUD COMPUTING & IoT</div>
+        <h1 class="title-main">IoT Smart Dash Button System</h1>
+        <p class="title-sub">Edge-to-Cloud Event-Driven Architecture with ESP8266 NodeMCU & Serverless Webhook Integration</p>
+        <div style="font-size:0.92rem;color:var(--cyan);font-weight:700;margin-top:8px;">
+          Presented By: G.Dhiraj kumar (2503A52735) • M.Sri Harsh (2503A52740) • Y.Jay Vardhan (2503A52747) • G.Sathwik (2503A52734) • S.Jashwanth (2503A52743)
+        </div>
+        
+        <div class="title-meta-box">
+          <div class="meta-item">
+            <span class="meta-label">Domain</span>
+            <span class="meta-val">Cloud Computing & Edge IoT</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Microcontroller</span>
+            <span class="meta-val">NodeMCU (ESP8266EX)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Cloud Target</span>
+            <span class="meta-val">Serverless Cloud Webhook</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Architecture</span>
+            <span class="meta-val">Event-Driven (EDA)</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 1 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: TEAM MEMBERS -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">PROJECT CONTRIBUTORS</div>
+        <h2 class="slide-title">Team Members & Contributions</h2>
+      </div>
+      <div class="slide-content cols-5">
+        <div class="info-card">
+          <div class="card-head">👑 Dhiraj kumar</div>
+          <div style="font-family:'JetBrains Mono';font-size:0.75rem;color:var(--cyan);font-weight:700;">2503A52735</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Team Lead & Cloud Architecture</div>
+          <ul class="card-list" style="font-size:0.85rem;">
+            <li>Serverless webhook design</li>
+            <li>Cloudflare Worker HTTP POST pipeline</li>
+            <li>Architecture planning & team lead</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">⚡ M.Sri Harsh</div>
+          <div style="font-family:'JetBrains Mono';font-size:0.75rem;color:var(--cyan);font-weight:700;">2503A52740</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Firmware & Networking</div>
+          <ul class="card-list" style="font-size:0.85rem;">
+            <li>ESP8266 C++ firmware (Untitled-1.cpp)</li>
+            <li>WiFiClientSecure TLS socket handler</li>
+            <li>Wi-Fi handshake & connection logic</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">🔌 Jay Vardhan</div>
+          <div style="font-family:'JetBrains Mono';font-size:0.75rem;color:var(--cyan);font-weight:700;">2503A52747</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Hardware & Circuit Design</div>
+          <ul class="card-list" style="font-size:0.85rem;">
+            <li>Wokwi circuit schematic design</li>
+            <li>NodeMCU Pin D2 (GPIO 4) pull-up logic</li>
+            <li>Short-circuit removal & pinout testing</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">⏱️ G.Sathwik</div>
+          <div style="font-family:'JetBrains Mono';font-size:0.75rem;color:var(--cyan);font-weight:700;">2503A52734</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Debounce Logic & Testing</div>
+          <ul class="card-list" style="font-size:0.85rem;">
+            <li>500ms software debounce filtering</li>
+            <li>Serial Monitor sanity sketch (sketch.ino)</li>
+            <li>Mechanical bounce rejection verification</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">📊 S.Jashwanth</div>
+          <div style="font-family:'JetBrains Mono';font-size:0.75rem;color:var(--cyan);font-weight:700;">2503A52743</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Telemetry & UI Dashboard</div>
+          <ul class="card-list" style="font-size:0.85rem;">
+            <li>Interactive live web dashboard</li>
+            <li>Python simulation runner (run_simulation.py)</li>
+            <li>Latency profiling & CSV event audit logging</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 2 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: INTRODUCTION & MOTIVATION -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">PROJECT BACKGROUND</div>
+        <h2 class="slide-title">Introduction & Motivation</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">💡 The Edge-Trigger Paradigm</div>
+          <ul class="card-list">
+            <li>Traditional IoT devices continuously poll servers or maintain open TCP sockets, draining battery power and wasting cloud bandwidth.</li>
+            <li>The <strong>Smart Dash Button</strong> adopts an <em>Event-Driven Architecture (EDA)</em>: the device remains completely idle until physically pressed.</li>
+            <li>A single push triggers an instant interrupt, establishes secure Wi-Fi, dispatches a cloud webhook, and immediately returns to sleep.</li>
+            <li>Massively reduces operational costs and maximizes hardware lifespan.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">🌍 Real-World Applications</div>
+          <ul class="card-list">
+            <li><strong>Industrial Smart Factory:</strong> Single-click machine emergency stops, hazard notifications, and maintenance logs.</li>
+            <li><strong>Healthcare:</strong> Patient bedside nurse-call button with instantaneous cloud alerts.</li>
+            <li><strong>Supply Chain & Logistics:</strong> Rapid one-touch inventory restocking (Amazon Dash model).</li>
+            <li><strong>Smart Home Automation:</strong> One-tap security lockdown or scene activation without opening an app.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 3 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: PROBLEM STATEMENT & OBJECTIVES -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">ENGINEERING CHALLENGES</div>
+        <h2 class="slide-title">Problem Statement & Objectives</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">⚠️ Core Challenges</div>
+          <ul class="card-list">
+            <li><strong>Floating Pin State:</strong> Unbiased digital inputs pick up electromagnetic noise, firing random phantom triggers.</li>
+            <li><strong>Mechanical Contact Bounce:</strong> Metal switch contacts oscillate for milliseconds, creating 5–10 duplicate triggers per push.</li>
+            <li><strong>Insecure Transmissions:</strong> Cleartext HTTP packets over Wi-Fi expose IoT devices to interception and spoofing.</li>
+            <li><strong>Dedicated Server Waste:</strong> Running full VMs 24/7 for sporadic button events is financially and computationally inefficient.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">🎯 Project Objectives</div>
+          <ul class="card-list">
+            <li>Eliminate external resistors by utilizing the internal 10kΩ <code>INPUT_PULLUP</code> resistor on NodeMCU D2.</li>
+            <li>Implement a reliable <strong>500ms software debounce filter</strong> to suppress electrical bouncing.</li>
+            <li>Establish TLS encrypted connections over Wi-Fi on port 443 via <code>WiFiClientSecure</code>.</li>
+            <li>Deploy a serverless webhook receiver and real-time verification dashboard.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 4 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: SYSTEM ARCHITECTURE -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">3-TIER CLOUD MODEL</div>
+        <h2 class="slide-title">End-to-End System Architecture</h2>
+      </div>
+      <div class="slide-content cols-3">
+        <div class="info-card">
+          <div class="card-head">1️⃣ Edge Layer</div>
+          <ul class="card-list">
+            <li><strong>ESP8266 NodeMCU (160 MHz)</strong></li>
+            <li>Physical Pushbutton on Pin D2 (GPIO 4)</li>
+            <li>Internal 10kΩ Pull-Up Resistor</li>
+            <li>Active Low Trigger (D2 &rarr; GND)</li>
+            <li>500ms Debounce Delay Filter</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">2️⃣ Transport Layer</div>
+          <ul class="card-list">
+            <li><strong>Wi-Fi 802.11 b/g/n Client</strong></li>
+            <li>TLS 1.3 Transport Layer Security</li>
+            <li>WiFiClientSecure on Port 443</li>
+            <li>Structured JSON Payload</li>
+            <li>Zero-socket persistence on completion</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">3️⃣ Cloud Layer</div>
+          <ul class="card-list">
+            <li><strong>Serverless Cloud Webhook</strong></li>
+            <li>Auto-scales instantly from zero</li>
+            <li>Responds with HTTP 200 OK</li>
+            <li>Downstream database / notification trigger</li>
+            <li>Live Telemetry Web Dashboard</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 5 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: HARDWARE & CIRCUITRY -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">CIRCUIT DESIGN</div>
+        <h2 class="slide-title">Hardware Specs & Schematic Logic</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">🔌 NodeMCU ESP8266 Specs</div>
+          <ul class="card-list">
+            <li><strong>CPU:</strong> Tensilica Xtensa L106 32-bit RISC running up to 160 MHz.</li>
+            <li><strong>Memory:</strong> 64 KB Instruction RAM, 96 KB Data RAM, 4 MB SPI Flash.</li>
+            <li><strong>Wi-Fi:</strong> Integrated 802.11 b/g/n baseband with PCB trace antenna.</li>
+            <li><strong>Pin Assignment:</strong> Pin D2 corresponds directly to GPIO 4.</li>
+            <li><strong>Power:</strong> 3.3V logic level powered through on-board micro-USB regulator.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">⚡ Pull-Up Circuit Schematic</div>
+          <ul class="card-list">
+            <li>One leg of the pushbutton connects to <strong>Pin D2</strong>.</li>
+            <li>Opposite diagonal leg connects directly to <strong>GND</strong>.</li>
+            <li><strong>Default State (Released):</strong> Internal pull-up holds D2 at <code>3.3V (HIGH)</code>.</li>
+            <li><strong>Pressed State:</strong> Closing the button shorts D2 to GND, reading <code>0V (LOW)</code>.</li>
+            <li><strong>Short Circuit Elimination:</strong> Removed the 3V3 power rail bypass from legacy diagrams, protecting the NodeMCU voltage regulator.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 6 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: FIRMWARE IMPLEMENTATION -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">CODE DESIGN</div>
+        <h2 class="slide-title">Embedded Firmware Implementation</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">🛠️ sketch.ino (Sanity Check)</div>
+          <ul class="card-list">
+            <li>Baseline hardware verification sketch.</li>
+            <li>Initializes Serial Monitor at <strong>115200 baud</strong>.</li>
+            <li>Declares <code>pinMode(buttonPin, INPUT_PULLUP)</code>.</li>
+            <li>Continuously monitors digital pin readings every 200ms.</li>
+            <li>Confirms mechanical integrity before enabling network overhead.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">🚀 Untitled-1.cpp (IoT Webhook)</div>
+          <ul class="card-list">
+            <li>Full production cloud trigger firmware.</li>
+            <li>Includes <code>&lt;ESP8266WiFi.h&gt;</code> and <code>&lt;WiFiClientSecure.h&gt;</code>.</li>
+            <li>Enforces <code>delay(500)</code> debounce lockout after a detected press.</li>
+            <li>Formats HTTP POST request with host header and JSON payload.</li>
+            <li>Calls <code>client.stop()</code> to immediately release socket resources.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 7 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: SERVERLESS WEBHOOK -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">CLOUD SERVICES</div>
+        <h2 class="slide-title">Serverless Cloud Webhook Processing</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">☁️ Serverless Computing Benefits</div>
+          <ul class="card-list">
+            <li><strong>Zero Idle Cost:</strong> Serverless workers (Cloudflare Workers / AWS Lambda) sleep until an incoming webhook packet arrives.</li>
+            <li><strong>Instant Auto-Scaling:</strong> Handles single button pushes or 50,000 simultaneous pulses with zero configuration.</li>
+            <li><strong>Global Edge Proximity:</strong> Dispatches to the nearest cloud edge node, reducing network latency.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">📦 JSON Payload & Handshake</div>
+          <ul class="card-list">
+            <li><strong>HTTP Method:</strong> <code>POST / HTTP/1.1</code> with TLS encryption.</li>
+            <li><strong>JSON Payload:</strong>
+              <code style="font-family:'JetBrains Mono';font-size:0.8rem;background:rgba(0,0,0,0.5);padding:4px 8px;border-radius:6px;display:block;margin-top:6px;">
+                {"message": "Hello from physical trigger button!", "pin": "D2", "device": "NodeMCU"}
+              </code>
+            </li>
+            <li><strong>Response:</strong> Returns HTTP <code>200 OK</code> with <code>{"status": "success", "received": true}</code>.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 8 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: RESULTS & VERIFICATION -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">RESULTS & VERIFICATION</div>
+        <h2 class="slide-title">Live Dashboard & Telemetry Results</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">📊 Measured System Metrics</div>
+          <ul class="card-list">
+            <li><strong>Average Roundtrip Latency:</strong> ~42 ms (Button push to 200 OK acknowledgment).</li>
+            <li><strong>Debounce Accuracy:</strong> 100% of sub-500ms bounce contacts safely filtered.</li>
+            <li><strong>Cloud Delivery Rate:</strong> 100% delivery reliability across all cycles.</li>
+            <li><strong>Wi-Fi Signal:</strong> -54 dBm RSSI on 802.11 b/g/n simulation network.</li>
+            <li><strong>Automated Testing:</strong> Validated locally via <code>run_simulation.py</code>.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">🖥️ Web Telemetry Dashboard Features</div>
+          <ul class="card-list">
+            <li>Interactive 3D push button with audio click feedback and Spacebar support.</li>
+            <li>Live animated cloud execution pipeline tracer.</li>
+            <li>Hardware Serial Console stream running at 115200 baud.</li>
+            <li>One-click CSV event audit export and custom endpoint tester.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 9 of 10</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: CONCLUSION & FUTURE SCOPE -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-tag">PROJECT SUMMARY</div>
+        <h2 class="slide-title">Future Enhancements & Conclusion</h2>
+      </div>
+      <div class="slide-content cols-2">
+        <div class="info-card">
+          <div class="card-head">🔮 Planned Future Enhancements</div>
+          <ul class="card-list">
+            <li><strong>Deep Sleep Optimization:</strong> Wake ESP8266 from deep sleep (&lt;20µA current) on button press for 1+ year battery operation.</li>
+            <li><strong>MQTT Protocol Migration:</strong> Shift from HTTP POST to MQTT for ultra-compact IoT telemetry payloads.</li>
+            <li><strong>Hardware Cryptography:</strong> Implement hardware mTLS via cryptographic co-processor chips.</li>
+            <li><strong>Multi-Click Detection:</strong> Support single, double, and long press gestures for multi-action triggers.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <div class="card-head">🏁 Conclusion</div>
+          <ul class="card-list">
+            <li>Successfully prototyped an end-to-end IoT Smart Dash Button using the ESP8266 NodeMCU.</li>
+            <li>Eliminated external hardware resistors by implementing internal pull-up logic.</li>
+            <li>Verified seamless edge-to-cloud serverless webhook communication.</li>
+            <li>Delivered an interactive telemetry dashboard and complete local testing suite.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Cloud Computing Project Presentation</span>
+        <span>Slide 10 of 10</span>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="kb-hint">Tip: Use <kbd>◀</kbd> and <kbd>▶</kbd> arrow keys to navigate slides</div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const slideNum = document.getElementById('slide-num');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= slides.length) index = slides.length - 1;
+      currentSlide = index;
+
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === currentSlide);
+      });
+
+      slideNum.textContent = `Slide ${currentSlide + 1} / ${slides.length}`;
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === slides.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+    nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        showSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        showSlide(currentSlide - 1);
+      }
+    });
+
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>

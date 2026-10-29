@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudPulse - AI Multi-Cloud Autopilot (ChatGPT Edition)</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --secondary: #06b6d4;
+      --dark-bg: #0f172a;
+      --dark-card: #1e293b;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --card-bg: #ffffff;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navbar */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 74px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: #334155;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-menu a:hover {
+      color: var(--primary);
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: #ffffff;
+      color: #334155;
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 90px 0 70px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #e0e7ff;
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 3.4rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+      color: #0f172a;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 36px;
+    }
+
+    /* Dashboard Preview Card */
+    .dashboard-preview {
+      margin: 50px auto 0;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      max-width: 980px;
+      text-align: left;
+    }
+
+    .preview-bar {
+      background: #f1f5f9;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .preview-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+    .dot-red { background: #f87171; }
+    .dot-yellow { background: #fbbf24; }
+    .dot-green { background: #34d399; }
+
+    .preview-content {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    .chart-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      color: #64748b;
+    }
+
+    .stats-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .metric-card-small {
+      background: #f8fafc;
+      padding: 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .metric-card-small p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .metric-card-small h3 {
+      font-size: 1.6rem;
+      color: #0f172a;
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 100px 0;
+      background: #ffffff;
+    }
+
+    .heading-center {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .heading-center h2 {
+      font-size: 2.4rem;
+      color: #0f172a;
+      margin-bottom: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
+      border-color: #c7d2fe;
+    }
+
+    .icon-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: #eef2ff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 22px;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+    }
+
+    /* Social Proof Banner */
+    .banner-metrics {
+      background: var(--dark-bg);
+      color: #ffffff;
+      padding: 70px 0;
+    }
+
+    .banner-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+
+    .banner-stat h2 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #818cf8, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .banner-stat p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      background: #090d16;
+      color: #cbd5e1;
+      padding: 80px 0 30px;
+    }
+
+    .footer-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-brand h3 {
+      color: #ffffff;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+
+    .footer-brand p {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      max-width: 320px;
+    }
+
+    .footer-col h4 {
+      color: #ffffff;
+      font-size: 1rem;
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col ul a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.92rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul a:hover {
+      color: #ffffff;
+    }
+
+    .copyright {
+      border-top: 1px solid #1e293b;
+      padding-top: 28px;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero h1 { font-size: 2.6rem; }
+      .grid-3, .banner-grid, .footer-layout, .preview-content {
+        grid-template-columns: 1fr;
+      }
+      .nav-menu { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#" class="brand-logo">🌐 CloudPulse</a>
+        <ul class="nav-menu">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#solutions">Solutions</a></li>
+          <li><a href="#metrics">Impact</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div class="cta-group">
+          <a href="#" class="btn btn-secondary">Log In</a>
+          <a href="#" class="btn btn-primary">Start Free Trial</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">✨ Generated by OpenAI ChatGPT (GPT-4o)</div>
+        <h1>Next-Generation Multi-Cloud <span>Autopilot &amp; Cost Intelligence</span></h1>
+        <p>Continuous AI-driven infrastructure rightsizing, idle resource reclaim, and predictive cloud telemetry across your entire AWS, Azure, and GCP footprint.</p>
+        <div class="cta-group" style="justify-content: center;">
+          <a href="#" class="btn btn-primary">Start 14-Day Free Trial</a>
+          <a href="#" class="btn btn-secondary">Book Live Demonstration</a>
+        </div>
+
+        <div class="dashboard-preview">
+          <div class="preview-bar">
+            <div class="preview-dot dot-red"></div>
+            <div class="preview-dot dot-yellow"></div>
+            <div class="preview-dot dot-green"></div>
+            <span style="font-size:0.8rem; color:#64748b; margin-left: 10px;">CloudPulse Autopilot Console • us-east-1 (Active)</span>
+          </div>
+          <div class="preview-content">
+            <div class="chart-box">
+              <span style="font-size:2rem; margin-bottom:8px;">📈</span>
+              <strong>Real-Time Cluster Workload &amp; Cost Curve</strong>
+              <p style="font-size:0.85rem; margin-top:4px;">Average cluster efficiency peaked at 94.6% after automated pod right-sizing.</p>
+            </div>
+            <div class="stats-column">
+              <div class="metric-card-small">
+                <p>Monthly Savings</p>
+                <h3 style="color:#10b981;">+$24,190</h3>
+              </div>
+              <div class="metric-card-small">
+                <p>Idle EC2 / VM Instances</p>
+                <h3 style="color:#6366f1;">48 Cleared</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" id="features">
+      <div class="container">
+        <div class="heading-center">
+          <h2>Enterprise Multi-Cloud Features</h2>
+          <p>Everything modern SRE and FinOps teams need for resilient cloud infrastructure.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="icon-badge">⚡</div>
+            <h3>Intelligent Right-Sizing</h3>
+            <p>Calculates exact CPU, memory, and IOPS requirements for containers and VMs, slashing over-provisioning costs safely.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">📊</div>
+            <h3>Predictive Billing Alerts</h3>
+            <p>Machine learning models detect spending anomalies before budget limits are breached with zero false alarms.</p>
+          </div>
+          <div class="card">
+            <div class="icon-badge">🔒</div>
+            <h3>Zero-Trust Governance</h3>
+            <p>Automated policy guardrails ensure all newly deployed cloud resources comply with corporate tags and security policies.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="banner-metrics" id="metrics">
+      <div class="container">
+        <div class="banner-grid">
+          <div class="banner-stat">
+            <h2>42%</h2>
+            <p>Cost Reduction</p>
+          </div>
+          <div class="banner-stat">
+            <h2>99.99%</h2>
+            <p>SLA Reliability</p>
+          </div>
+          <div class="banner-stat">
+            <h2>15 min</h2>
+            <p>Setup &amp; Deployment</p>
+          </div>
+          <div class="banner-stat">
+            <h2>10M+</h2>
+            <p>Pods Managed</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-layout">
+        <div class="footer-brand">
+          <h3>CloudPulse Inc.</h3>
+          <p>Autonomous FinOps and cloud infrastructure optimization platform powered by generative AI.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#">Overview</a></li>
+            <li><a href="#">AWS Integrations</a></li>
+            <li><a href="#">GCP Integrations</a></li>
+            <li><a href="#">Azure Integrations</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="#">Kubernetes FinOps</a></li>
+            <li><a href="#">Enterprise SRE</a></li>
+            <li><a href="#">Security Guardrails</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Contact Team</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2026 CloudPulse Inc. Generated via OpenAI ChatGPT (GPT-4o). All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

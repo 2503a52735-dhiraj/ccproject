@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "author": "Anonymous",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-node-mcu",
+      "id": "nodemcu",
+      "top": 0,
+      "left": 0,
+      "attrs": { "env": "esp8266-v1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 100,
+      "left": 100,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "nodemcu:GND.1", "btn1:1.l", "black", [ "v10" ] ],
+    [ "btn1:1.r", "nodemcu:D2", "red", [ "h-10" ] ],
+    [ "nodemcu:3V3", "btn1:2.l", "red", [ "v20" ] ]
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ESP8266 NodeMCU IoT Dash Button & AWS Learner Lab Cloud Computing Live Monitoring Dashboard">
+  <title>ESP8266 IoT Dash Button | AWS Learner Lab Cloud Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="brand-icon-box">
+          <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2"/>
+            <rect x="9" y="9" width="6" height="6"/>
+            <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">ESP8266 IoT DASH BUTTON</div>
+          <div class="brand-subtitle">AWS Learner Lab Telemetry &amp; Serverless Webhook Controller • NodeMCU 1.0</div>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <div class="status-pill status-online" id="status-pill">
+          <span class="pulsing-dot"></span>
+          <span id="system-status-text">SYSTEM ONLINE</span>
+        </div>
+        <div class="status-pill badge-aws" id="aws-status-pill">
+          <svg class="aws-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.74 18.36c-2.42 1.76-5.83 2.7-8.94 2.7-4.37 0-8.3-1.63-11.28-4.36-.23-.21-.05-.56.24-.44 3.75 1.5 7.89 2.25 12.06 2.25 2.76 0 5.86-.54 8.24-1.68.39-.19.74.26.35.53h.01l-.67-.01v.01zm1.25-1.57c-.31-.4-.61-.81-.92-1.22-.1-.13-.02-.27.12-.22 1.39.46 2.78.93 4.17 1.39.19.06.2.34.02.43-1.07.57-2.14 1.13-3.21 1.7-.13.07-.26-.03-.18-.17v-.01c.21-.36.43-.72.64-1.08l-.64.17z"/>
+          </svg>
+          <span id="aws-status-text">AWS LEARNER LAB: us-east-1</span>
+        </div>
+        <div class="badge-mode" id="mode-badge">
+          <span class="badge-tag">FIRMWARE</span>
+          <span id="active-firmware-name">Untitled-1.cpp (AWS Lambda Webhook)</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="presentation.html" target="_blank" class="nav-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; background:rgba(99,102,241,0.2); border-color:rgba(99,102,241,0.4);" title="Open Course Project Slides Deck">
+          📊 <span>Project Slides (PPT)</span>
+        </a>
+        <button class="nav-btn" id="toggle-audio-btn" title="Toggle Sound FX">
+          <span id="audio-icon">🔊</span> Sound: <strong id="audio-state">ON</strong>
+        </button>
+        <button class="nav-btn nav-btn-primary" id="run-auto-test-btn" title="Run full simulated test sequence">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Run Test Cycle
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Grid Content -->
+    <main class="dashboard-grid">
+      
+      <!-- COLUMN 1: HARDWARE & PHYSICAL DASH BUTTON -->
+      <section class="card hardware-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="card-icon">🔘</span>
+            <h3>Interactive Physical Dash Button</h3>
+          </div>
+          <span class="pin-badge" id="pin-state-badge">PIN D2: HIGH (RELEASED)</span>
+        </div>
+
+        <div class="button-stage">
+          <div class="tactile-button-assembly" id="button-assembly">
+            <div class="button-housing">
+              <div class="led-ring" id="led-ring"></div>
+              <button class="push-button-cap" id="dash-button" aria-label="IoT Physical Trigger Button">
+                <div class="cap-inner">
+                  <div class="cap-icon">⚡</div>
+                  <span class="cap-label">PUSH TO TRIGGER</span>
+                  <span class="cap-sub">GPIO 4 / PIN D2 &rarr; AWS</span>
+                </div>
+              </button>
+            </div>
+            <div class="press-hint">Click button or press <kbd>SPACE</kbd></div>
+          </div>
+        </div>
+
+        <!-- Hardware Controls -->
+        <div class="hardware-controls">
+          <button class="btn btn-primary btn-aws" id="btn-press-action">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+            Trigger Single Click
+          </button>
+          <button class="btn btn-secondary" id="btn-burst-action" title="Tests debounce delay(500)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Burst Test (3x Debounce)
+          </button>
+        </div>
+
+        <!-- Circuit Schematic Quick-View -->
+        <div class="circuit-summary">
+          <div class="circuit-header">
+            <h4>Wokwi Circuit Wiring Specs</h4>
+            <span class="circuit-spec-tag">INPUT_PULLUP</span>
+          </div>
+          <div class="wiring-schematic-mini">
+            <div class="schematic-node node-mcu">
+              <span class="node-title">NodeMCU</span>
+              <span class="pin-label">D2 (GPIO 4)</span>
+            </div>
+            <div class="schematic-wire active" id="wire-d2">
+              <span class="wire-label">Normal: 3.3V (HIGH)</span>
+            </div>
+            <div class="schematic-node node-btn">
+              <span class="node-title">Pushbutton</span>
+              <span class="pin-label">btn1:1.l</span>
+            </div>
+            <div class="schematic-wire ground" id="wire-gnd">
+              <span class="wire-label">GND (0V)</span>
+            </div>
+            <div class="schematic-node node-gnd">
+              <span class="node-title">NodeMCU</span>
+              <span class="pin-label">GND.1</span>
+            </div>
+          </div>
+          <div class="schematic-caption">
+            Internal 10kΩ pull-up holds D2 at 3.3V. Pressing button shorts D2 to GND, reading <code>LOW (0V)</code> and firing the AWS Lambda interrupt.
+          </div>
+        </div>
+
+        <!-- Firmware Selector Toggle -->
+        <div class="firmware-toggle-box">
+          <span class="firmware-toggle-label">Active Firmware Emulation:</span>
+          <div class="toggle-group">
+            <button class="toggle-opt active" id="mode-cloud-opt" data-mode="cloud">Untitled-1.cpp (AWS Lambda)</button>
+            <button class="toggle-opt" id="mode-sketch-opt" data-mode="basic">sketch.ino (Serial Monitor)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 2: TELEMETRY & CLOUD PIPELINE -->
+      <section class="card telemetry-card">
+        <!-- 4 Metric Cards -->
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-title">TOTAL CLICKS</div>
+            <div class="metric-value-row">
+              <span class="metric-value" id="val-total-clicks">0</span>
+              <span class="metric-sub">presses</span>
+            </div>
+            <div class="metric-footer text-success">
+              <span>Debounce protected (500ms)</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-title">AWS DISPATCHES</div>
+            <div class="metric-value-row">
+              <span class="metric-value text-accent" id="val-successful-posts">0</span>
+              <span class="metric-sub">delivered</span>
+            </div>
+            <div class="metric-footer">
+              <span id="cloud-success-rate">100% Delivery rate</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-title">AVG ROUNDTRIP</div>
+            <div class="metric-value-row">
+              <span class="metric-value" id="val-avg-latency">42</span>
+              <span class="metric-sub">ms</span>
+            </div>
+            <div class="metric-footer text-muted">
+              <span>HTTPS TLS 1.3 / AWS Lambda</span>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-title">AWS REGION</div>
+            <div class="metric-value-row">
+              <span class="metric-value" style="color: #FF9900; font-size: 1.15rem;" id="val-aws-region">us-east-1</span>
+            </div>
+            <div class="metric-footer" style="color: #ffb039;">
+              <span>Role: LabRole (Academy)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Animated Cloud Execution Pipeline -->
+        <div class="pipeline-section">
+          <div class="section-title-row">
+            <h4>Live Cloud Computing Pipeline</h4>
+            <span class="pipeline-badge" id="pipeline-status">IDLE - AWAITING TRIGGER</span>
+          </div>
+
+          <div class="pipeline-flow">
+            <div class="flow-step" id="step-button">
+              <div class="step-icon">🔴</div>
+              <div class="step-label">1. Button Push</div>
+              <div class="step-detail">D2 &rarr; GND (LOW)</div>
+            </div>
+            <div class="flow-connector" id="conn-1"><span class="flow-dot"></span></div>
+
+            <div class="flow-step" id="step-esp">
+              <div class="step-icon">⚡</div>
+              <div class="step-label">2. ESP8266 ISR</div>
+              <div class="step-detail">Debounce 500ms</div>
+            </div>
+            <div class="flow-connector" id="conn-2"><span class="flow-dot"></span></div>
+
+            <div class="flow-step" id="step-wifi">
+              <div class="step-icon">📶</div>
+              <div class="step-label">3. Wi-Fi Client</div>
+              <div class="step-detail">WiFiClientSecure</div>
+            </div>
+            <div class="flow-connector" id="conn-3"><span class="flow-dot"></span></div>
+
+            <div class="flow-step" id="step-cloud">
+              <div class="step-icon">☁️</div>
+              <div class="step-label">4. AWS Lambda</div>
+              <div class="step-detail" id="step-cloud-detail">LabRole / Function URL</div>
+            </div>
+            <div class="flow-connector" id="conn-4"><span class="flow-dot"></span></div>
+
+            <div class="flow-step" id="step-response">
+              <div class="step-icon">✅</div>
+              <div class="step-label">5. HTTP 200 OK</div>
+              <div class="step-detail" id="step-response-detail">{"status":"success"}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AWS LEARNER LAB INTEGRATION PANEL -->
+        <div class="aws-endpoint-panel">
+          <div class="aws-header-bar">
+            <div class="aws-header-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF9900">
+                <path d="M18.74 18.36c-2.42 1.76-5.83 2.7-8.94 2.7-4.37 0-8.3-1.63-11.28-4.36-.23-.21-.05-.56.24-.44 3.75 1.5 7.89 2.25 12.06 2.25 2.76 0 5.86-.54 8.24-1.68.39-.19.74.26.35.53h.01l-.67-.01v.01zm1.25-1.57c-.31-.4-.61-.81-.92-1.22-.1-.13-.02-.27.12-.22 1.39.46 2.78.93 4.17 1.39.19.06.2.34.02.43-1.07.57-2.14 1.13-3.21 1.7-.13.07-.26-.03-.18-.17v-.01c.21-.36.43-.72.64-1.08l-.64.17z"/>
+              </svg>
+              <span>AWS Learner Lab Endpoint (Lambda / API Gateway)</span>
+            </div>
+            <span class="aws-pill" id="endpoint-mode-tag">AWS LIVE PROXY READY</span>
+          </div>
+
+          <div class="aws-lab-info-row">
+            <div class="aws-meta-chip">Region: <strong>us-east-1 (N. Virginia)</strong></div>
+            <div class="aws-meta-chip">IAM Role: <strong>LabRole</strong></div>
+            <div class="aws-meta-chip">Auth: <strong>NONE (Public Function URL)</strong></div>
+          </div>
+
+          <div class="endpoint-input-row">
+            <span class="http-method" style="background: rgba(255, 153, 0, 0.2); color: #FF9900; border-color: rgba(255, 153, 0, 0.4);">POST</span>
+            <input type="text" id="target-endpoint-input" class="endpoint-input" placeholder="Paste AWS Lambda Function URL or API Gateway URL here..." spellcheck="false">
+            <button class="btn btn-small btn-aws" id="btn-save-endpoint">Apply</button>
+            <button class="btn btn-small btn-aws-outline" id="btn-test-cloud-ping">Ping AWS</button>
+          </div>
+
+          <div class="aws-action-btns">
+            <button class="btn btn-small btn-aws-outline" id="btn-open-guide">
+              📘 AWS Learner Lab Setup Guide (3 Steps)
+            </button>
+            <button class="btn btn-small btn-aws-outline" id="btn-copy-lambda-code">
+              📋 Copy Lambda Handler Code
+            </button>
+          </div>
+
+          <div class="payload-preview-box" style="margin-top: 14px;">
+            <div class="payload-header">
+              <span>Payload Dispatched to AWS Lambda:</span>
+              <button class="copy-payload-btn" id="btn-copy-payload">Copy JSON</button>
+            </div>
+            <pre class="json-code" id="payload-code">{
+  "device": "ESP8266-NodeMCU",
+  "pin": "D2",
+  "gpio": 4,
+  "message": "Hello from physical ESP8266 dash button!",
+  "cloud": "AWS Learner Lab",
+  "region": "us-east-1",
+  "timestamp": 1728620000,
+  "event_id": "evt_aws_8829"
+}</pre>
+          </div>
+        </div>
+
+        <!-- Cloud Event History Table -->
+        <div class="history-table-container">
+          <div class="history-table-header">
+            <h4>Live Cloud Webhook Dispatch Log</h4>
+            <div class="table-actions">
+              <button class="btn-text" id="btn-clear-table">Clear Log</button>
+              <button class="btn-text" id="btn-export-csv">Export CSV</button>
+            </div>
+          </div>
+          <div class="table-scroll-wrapper">
+            <table class="data-table" id="events-table">
+              <thead>
+                <tr>
+                  <th>TIME</th>
+                  <th>EVENT ID</th>
+                  <th>TRIGGER PIN</th>
+                  <th>CLOUD TARGET</th>
+                  <th>STATUS</th>
+                  <th>LATENCY</th>
+                </tr>
+              </thead>
+              <tbody id="events-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 3: SERIAL MONITOR & DEVICE SPECS -->
+      <section class="card terminal-card">
+        <!-- Terminal Header -->
+        <div class="terminal-header">
+          <div class="terminal-title-group">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">ESP8266 SERIAL CONSOLE</span>
+          </div>
+          <div class="baud-badge">115200 BAUD</div>
+        </div>
+
+        <!-- Terminal Controls -->
+        <div class="terminal-toolbar">
+          <div class="filter-group">
+            <button class="filter-chip active" data-filter="all">ALL</button>
+            <button class="filter-chip" data-filter="serial">SERIAL</button>
+            <button class="filter-chip" data-filter="cloud">CLOUD</button>
+          </div>
+          <div class="term-tools">
+            <label class="auto-scroll-label">
+              <input type="checkbox" id="autoscroll-toggle" checked> Auto-Scroll
+            </label>
+            <button class="term-tool-btn" id="btn-clear-terminal" title="Clear Console">Clear</button>
+            <button class="term-tool-btn" id="btn-copy-terminal" title="Copy Log">Copy</button>
+          </div>
+        </div>
+
+        <!-- Terminal Output -->
+        <div class="terminal-body" id="terminal-body">
+          <div class="terminal-line system-msg">[SYSTEM] Initializing ESP8266 NodeMCU Serial Monitor at 115200 baud...</div>
+          <div class="terminal-line system-msg">[SYSTEM] GPIO 4 (D2) configured with INPUT_PULLUP (Internal 10k resistor).</div>
+          <div class="terminal-line net-msg">[WIFI] Connecting to fictional network: Wokwi-GUEST....</div>
+          <div class="terminal-line net-msg">[WIFI] Wi-Fi (simulated) connected. IP: 192.168.1.104</div>
+          <div class="terminal-line ready-msg">[AWS] Ready to dispatch to AWS Learner Lab (Region: us-east-1, Role: LabRole).</div>
+          <div class="terminal-line ready-msg">[READY] System armed. Waiting for pushbutton press on Pin D2...</div>
+        </div>
+
+        <!-- Device Diagnostics Panel -->
+        <div class="device-diagnostics">
+          <div class="diag-header">Device Hardware Info</div>
+          <div class="diag-grid">
+            <div class="diag-item">
+              <span class="diag-label">Microcontroller:</span>
+              <span class="diag-val">ESP8266EX (160 MHz)</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Cloud Target:</span>
+              <span class="diag-val" style="color: #FF9900;">AWS Learner Lab</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Free Heap:</span>
+              <span class="diag-val" id="diag-heap">43,248 bytes</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Active SSID:</span>
+              <span class="diag-val">Wokwi-GUEST</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Debounce Delay:</span>
+              <span class="diag-val">500 ms</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Circuit State:</span>
+              <span class="diag-val text-emerald">PULLUP OK (No short)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project File Quick Links -->
+        <div class="project-files-bar">
+          <span class="files-title">Source Files:</span>
+          <span class="file-tag">sketch.ino</span>
+          <span class="file-tag">Untitled-1.cpp</span>
+          <span class="file-tag">aws_lambda_handler.py</span>
+          <span class="file-tag">server.py</span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- AWS SETUP GUIDE MODAL -->
+  <div class="aws-modal-backdrop" id="aws-guide-modal">
+    <div class="aws-modal-card">
+      <div class="aws-modal-header">
+        <div class="aws-modal-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#FF9900">
+            <path d="M18.74 18.36c-2.42 1.76-5.83 2.7-8.94 2.7-4.37 0-8.3-1.63-11.28-4.36-.23-.21-.05-.56.24-.44 3.75 1.5 7.89 2.25 12.06 2.25 2.76 0 5.86-.54 8.24-1.68.39-.19.74.26.35.53h.01l-.67-.01v.01zm1.25-1.57c-.31-.4-.61-.81-.92-1.22-.1-.13-.02-.27.12-.22 1.39.46 2.78.93 4.17 1.39.19.06.2.34.02.43-1.07.57-2.14 1.13-3.21 1.7-.13.07-.26-.03-.18-.17v-.01c.21-.36.43-.72.64-1.08l-.64.17z"/>
+          </svg>
+          Connecting AWS Learner Lab to this Dashboard (3 Simple Steps)
+        </div>
+        <button class="aws-modal-close" id="btn-close-modal">&times;</button>
+      </div>
+      <div class="aws-modal-body">
+        <div class="aws-step-item">
+          <div class="aws-step-num">1</div>
+          <div>
+            <strong>Create the AWS Lambda Function in AWS Academy Learner Lab:</strong>
+            <p>Log into AWS Learner Lab, open the AWS Console in <code>us-east-1</code>, search for <strong>Lambda</strong>, and click <strong>Create function</strong>:</p>
+            <ul>
+              <li>Function name: <code>IoTButtonHandler</code></li>
+              <li>Runtime: <code>Python 3.12</code></li>
+              <li>Execution role: Choose <strong>"Use an existing role"</strong> &rarr; Select <strong>"LabRole"</strong> (mandatory in AWS Learner Lab).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="aws-step-item">
+          <div class="aws-step-num">2</div>
+          <div>
+            <strong>Enable Function URL (Direct Public HTTPS Endpoint):</strong>
+            <p>Go to your function's <strong>Configuration</strong> tab &rarr; click <strong>Function URL</strong> &rarr; <strong>Create function URL</strong>:</p>
+            <ul>
+              <li>Auth type: <strong>NONE</strong></li>
+              <li>Check <strong>"Configure cross-origin resource sharing (CORS)"</strong> (Allow origin: <code>*</code>, Methods: <code>POST, OPTIONS</code>)</li>
+              <li>Click <strong>Save</strong> and copy your new Function URL (e.g., <code>https://xxxx.lambda-url.us-east-1.on.aws/</code>).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="aws-step-item">
+          <div class="aws-step-num">3</div>
+          <div>
+            <strong>Paste the Code & Connect:</strong>
+            <p>Copy the code from <code>aws_lambda_handler.py</code> (or click the button below), paste it into the Lambda Code editor in AWS, and click <strong>Deploy</strong>.</p>
+            <p>Then paste your Function URL into the dashboard input and click <strong>Apply</strong>! Every button press will now trigger your real AWS Lambda in AWS Learner Lab.</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; display: flex; gap: 10px;">
+          <button class="btn btn-aws" id="btn-copy-modal-code">📋 Copy Complete Lambda Code</button>
+          <button class="btn btn-secondary" id="btn-close-modal-footer">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

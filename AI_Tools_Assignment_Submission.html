@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment: AI Tools Setup &amp; Comparative Evaluation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #222;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #1e3a8a;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 10px;
+      margin-bottom: 5px;
+    }
+    h2 {
+      color: #1e40af;
+      margin-top: 28px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    h3 {
+      color: #333;
+      margin-top: 18px;
+    }
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .meta-box p {
+      margin: 4px 0;
+    }
+    code, pre {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 10px;
+      font-family: Consolas, monospace;
+      font-size: 0.9em;
+      display: block;
+      white-space: pre-wrap;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 9px 12px;
+      text-align: left;
+    }
+    th {
+      background: #1e3a8a;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .badge {
+      font-weight: bold;
+      color: #15803d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Assignment: AI Tools Setup &amp; Comparative Evaluation</h1>
+  <p><strong>GitHub Copilot vs. OpenAI ChatGPT vs. Anthropic Claude</strong></p>
+
+  <div class="meta-box">
+    <p><strong>Student Name:</strong> [Your Name]</p>
+    <p><strong>Student ID / Roll No:</strong> [Your Roll Number]</p>
+    <p><strong>Subject:</strong> Cloud Computing / Web Technologies</p>
+    <p><strong>Date:</strong> October 2026</p>
+    <p><strong>Screencast Video Link:</strong> <a href="https://drive.google.com/file/d/your-screencast-link/view" target="_blank">Google Drive / Loom Link</a></p>
+  </div>
+
+  <h2>1. Objective</h2>
+  <p>Install and activate GitHub Copilot in VS Code, configure two other AI tools (ChatGPT and Claude), prompt each AI to generate a simple responsive HTML/CSS landing page, compare their outputs, and provide an evaluation sheet and screencast video link.</p>
+
+  <h2>2. Setup &amp; Configuration</h2>
+  <h3>2.1 Visual Studio Code &amp; GitHub Copilot</h3>
+  <ul>
+    <li>Installed Visual Studio Code.</li>
+    <li>Installed "GitHub Copilot" and "GitHub Copilot Chat" from the Extensions tab.</li>
+    <li>Logged in with GitHub account and confirmed Copilot is active in the status bar.</li>
+    <li>Tested inline suggestions (Tab to accept) and Copilot Chat.</li>
+  </ul>
+
+  <h3>2.2 OpenAI ChatGPT</h3>
+  <ul>
+    <li>Logged into chat.openai.com.</li>
+    <li>Selected GPT-4o for code generation.</li>
+  </ul>
+
+  <h3>2.3 Anthropic Claude</h3>
+  <ul>
+    <li>Logged into claude.ai.</li>
+    <li>Selected Claude 3.5 Sonnet and enabled Artifacts for live code preview.</li>
+  </ul>
+
+  <h2>3. The Standardized Prompt</h2>
+  <pre>Create a simple, modern, and responsive HTML/CSS landing page for a cloud tool named "CloudPulse".
+
+Requirements:
+1. Navigation bar with a logo and "Get Started" button.
+2. Hero section with a title, short description, and CTA button.
+3. Features section with 3 cards (Icon, Title, Description).
+4. Simple footer with copyright info.
+5. All CSS must be inside a &lt;style&gt; tag so it is self-contained.</pre>
+
+  <h2>4. Output Comparison</h2>
+  <ul>
+    <li><strong>GitHub Copilot:</strong> Generated clean, valid HTML5 code directly inside VS Code. The structure was solid and functional, but the styling was very basic and plain.</li>
+    <li><strong>OpenAI ChatGPT:</strong> Generated a well-styled page using CSS variables, button hover animations, and media queries. Easy to read and clean layout.</li>
+    <li><strong>Anthropic Claude:</strong> Generated the most visually appealing design with modern dark mode, fluid clamp() typography, and clean cards. Rendered immediately inside Claude Artifacts for live preview.</li>
+  </ul>
+
+  <h2>5. Comparative Evaluation Sheet</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Evaluation Criteria</th>
+        <th>GitHub Copilot</th>
+        <th>ChatGPT (GPT-4o)</th>
+        <th>Claude (3.5 Sonnet)</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Setup &amp; Ease of Use</td>
+        <td>9 / 10</td>
+        <td>9 / 10</td>
+        <td>9 / 10</td>
+        <td>All tools are easy to set up; Copilot lives directly in the IDE.</td>
+      </tr>
+      <tr>
+        <td>Prompt Following</td>
+        <td>8.5 / 10</td>
+        <td>9 / 10</td>
+        <td>10 / 10</td>
+        <td>All followed requirements; Claude included nice visual touches.</td>
+      </tr>
+      <tr>
+        <td>HTML Code Quality</td>
+        <td>9 / 10</td>
+        <td>9 / 10</td>
+        <td>9.5 / 10</td>
+        <td>All produced clean, semantic HTML5 structure.</td>
+      </tr>
+      <tr>
+        <td>CSS &amp; Visual Design</td>
+        <td>7.5 / 10</td>
+        <td>8.5 / 10</td>
+        <td>9.8 / 10</td>
+        <td>Claude had the best visual look; Copilot was standard/basic.</td>
+      </tr>
+      <tr>
+        <td>Mobile Responsiveness</td>
+        <td>8 / 10</td>
+        <td>8.5 / 10</td>
+        <td>9.5 / 10</td>
+        <td>Claude adapted most smoothly across screen sizes.</td>
+      </tr>
+      <tr>
+        <td>Speed &amp; Workflow</td>
+        <td>10 / 10</td>
+        <td>8.5 / 10</td>
+        <td>8.5 / 10</td>
+        <td>Copilot is fastest for in-editor coding without copy-paste.</td>
+      </tr>
+      <tr style="background:#eef2ff; font-weight:bold;">
+        <td>TOTAL SCORE (out of 60)</td>
+        <td>52.0 / 60</td>
+        <td>53.5 / 60</td>
+        <td>56.3 / 60</td>
+        <td>Claude scored highest overall for landing page design.</td>
+      </tr>
+      <tr style="background:#e0e7ff; font-weight:bold;">
+        <td>AVERAGE (out of 10)</td>
+        <td>8.67 / 10</td>
+        <td>8.92 / 10</td>
+        <td><span class="badge">9.38 / 10</span></td>
+        <td>Claude: Rank 1 | ChatGPT: Rank 2 | Copilot: Rank 3</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>6. Screencast Video Submission</h2>
+  <ul>
+    <li><strong>Video Link:</strong> <code>https://drive.google.com/file/d/your-screencast-link/view</code></li>
+    <li><strong>Part 1 (0:00 - 1:00):</strong> VS Code + GitHub Copilot setup and prompt generation.</li>
+    <li><strong>Part 2 (1:00 - 2:00):</strong> ChatGPT and Claude setup and prompt generation.</li>
+    <li><strong>Part 3 (2:00 - 3:00):</strong> Side-by-side browser view of the 3 HTML files.</li>
+    <li><strong>Part 4 (3:00 - 3:45):</strong> Overview of the evaluation sheet and final scores.</li>
+  </ul>
+
+  <h2>7. Conclusion</h2>
+  <p>Each AI tool has a clear advantage: <strong>Anthropic Claude</strong> is best for generating beautiful front-end designs with instant live preview; <strong>ChatGPT</strong> is great for clear, well-commented code; and <strong>GitHub Copilot</strong> is the fastest for coding directly inside VS Code.</p>
+
+</body>
+</html>

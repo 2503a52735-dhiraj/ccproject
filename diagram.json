@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "author": "ccproject",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-node-mcu",
+      "id": "nodemcu",
+      "top": 0,
+      "left": 0,
+      "attrs": { "env": "esp8266-v1" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 100,
+      "left": 100,
+      "attrs": { "color": "red" }
+    }
+  ],
+  "connections": [
+    [ "nodemcu:D2", "btn1:1.l", "green", [ "h-10" ] ],
+    [ "nodemcu:GND.1", "btn1:2.l", "black", [ "v20" ] ]
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,8 @@
+{
+  "provider": "aws_learner_lab",
+  "region": "us-east-1",
+  "role": "LabRole",
+  "endpoint_url": "https://mfbbqvwqfjhoz5t5dqrwcdthra0jexth.lambda-url.us-east-1.on.aws/",
+  "environment": "AWS Academy Learner Lab",
+  "auto_forward": true
+}
